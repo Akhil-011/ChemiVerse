@@ -1,0 +1,277 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Dark theme (default) */
+    --background: 222 47% 5%;
+    --foreground: 210 40% 98%;
+    --card: 222 47% 8%;
+    --card-foreground: 210 40% 98%;
+    --primary: 189 100% 50%;
+    --primary-foreground: 222 47% 5%;
+    --secondary: 262 83% 58%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217 33% 12%;
+    --muted-foreground: 215 20% 55%;
+    --accent: 158 64% 52%;
+    --accent-foreground: 222 47% 5%;
+    --border: 217 33% 17%;
+    --input: 217 33% 14%;
+    --ring: 189 100% 50%;
+    --radius: 0.75rem;
+
+    /* Semantic color tokens */
+    --color-primary: 189 100% 50%;
+    --color-secondary: 262 83% 58%;
+    --color-accent: 158 64% 52%;
+    --color-surface: 222 47% 8%;
+    --color-surface-2: 217 33% 12%;
+    --color-border: 217 33% 17%;
+    --text-base: 210 40% 98%;
+    --text-subtle: 215 20% 70%;
+    --text-muted: 215 20% 45%;
+  }
+
+  .light {
+    --background: 210 40% 98%;
+    --foreground: 222 47% 11%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+    --primary: 189 100% 38%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 262 83% 58%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 210 40% 93%;
+    --muted-foreground: 215 20% 40%;
+    --accent: 158 64% 40%;
+    --accent-foreground: 0 0% 100%;
+    --border: 214 32% 85%;
+    --input: 214 32% 91%;
+    --ring: 189 100% 38%;
+
+    --color-primary: 189 100% 38%;
+    --color-secondary: 262 83% 58%;
+    --color-accent: 158 64% 40%;
+    --color-surface: 0 0% 100%;
+    --color-surface-2: 210 40% 93%;
+    --color-border: 214 32% 85%;
+    --text-base: 222 47% 11%;
+    --text-subtle: 215 20% 35%;
+    --text-muted: 215 20% 55%;
+  }
+
+  * {
+    @apply border-border;
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    background-image: radial-gradient(ellipse at 20% 50%, rgba(0, 212, 255, 0.03) 0%, transparent 50%),
+                      radial-gradient(ellipse at 80% 20%, rgba(139, 92, 246, 0.04) 0%, transparent 50%);
+  }
+}
+
+@layer components {
+  /* Glassmorphism Card */
+  .glass-card {
+    @apply rounded-2xl border backdrop-blur-md;
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(255, 255, 255, 0.08);
+  }
+
+  .glass-card-hover {
+    @apply glass-card transition-all duration-300;
+  }
+
+  .glass-card-hover:hover {
+    background: rgba(255, 255, 255, 0.07);
+    border-color: rgba(0, 212, 255, 0.2);
+    box-shadow: 0 0 30px rgba(0, 212, 255, 0.1), 0 20px 40px rgba(0, 0, 0, 0.3);
+    transform: translateY(-2px);
+  }
+
+  /* Gradient Text */
+  .gradient-text {
+    background: linear-gradient(135deg, #00d4ff 0%, #8b5cf6 50%, #10b981 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .gradient-text-blue {
+    background: linear-gradient(135deg, #00d4ff 0%, #0066ff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Glow Borders */
+  .glow-border-cyan {
+    box-shadow: 0 0 20px rgba(0, 212, 255, 0.2), inset 0 0 20px rgba(0, 212, 255, 0.05);
+    border-color: rgba(0, 212, 255, 0.3) !important;
+  }
+
+  .glow-border-purple {
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.2), inset 0 0 20px rgba(139, 92, 246, 0.05);
+    border-color: rgba(139, 92, 246, 0.3) !important;
+  }
+
+  /* Neon Button */
+  .btn-neon {
+    @apply relative overflow-hidden px-6 py-3 rounded-xl font-semibold text-sm tracking-wide transition-all duration-300;
+    background: linear-gradient(135deg, #00d4ff, #0066ff);
+    box-shadow: 0 0 20px rgba(0, 212, 255, 0.4);
+  }
+
+  .btn-neon:hover {
+    box-shadow: 0 0 40px rgba(0, 212, 255, 0.7), 0 0 80px rgba(0, 102, 255, 0.3);
+    transform: translateY(-1px);
+  }
+
+  .btn-neon-purple {
+    @apply btn-neon;
+    background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.4);
+  }
+
+  .btn-neon-purple:hover {
+    box-shadow: 0 0 40px rgba(139, 92, 246, 0.7);
+  }
+
+  .btn-ghost-neon {
+    @apply px-6 py-3 rounded-xl font-semibold text-sm tracking-wide transition-all duration-300 border;
+    border-color: rgba(0, 212, 255, 0.4);
+    color: #00d4ff;
+    background: transparent;
+  }
+
+  .btn-ghost-neon:hover {
+    background: rgba(0, 212, 255, 0.1);
+    box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+    border-color: rgba(0, 212, 255, 0.6);
+  }
+
+  /* Atom Badge */
+  .atom-badge {
+    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border;
+    background: rgba(0, 212, 255, 0.1);
+    border-color: rgba(0, 212, 255, 0.25);
+    color: #00d4ff;
+  }
+
+  /* Section Heading */
+  .section-label {
+    @apply text-xs font-semibold uppercase tracking-widest;
+    color: #00d4ff;
+  }
+
+  /* Chemistry Grid BG */
+  .chem-grid-bg {
+    background-image: linear-gradient(rgba(0, 212, 255, 0.03) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(0, 212, 255, 0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.03);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(0, 212, 255, 0.3);
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 212, 255, 0.5);
+  }
+
+  /* Loading shimmer */
+  .shimmer {
+    background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.1), transparent);
+    background-size: 200% 100%;
+    animation: shimmer 2s linear infinite;
+  }
+
+  /* Molecule atom colors */
+  .atom-H { background: #ffffff; color: #000; }
+  .atom-C { background: #404040; color: #fff; }
+  .atom-O { background: #e63946; color: #fff; }
+  .atom-N { background: #4361ee; color: #fff; }
+  .atom-S { background: #f4d03f; color: #000; }
+  .atom-P { background: #f97316; color: #fff; }
+  .atom-Cl { background: #2ecc71; color: #000; }
+  .atom-default { background: #8b5cf6; color: #fff; }
+
+  /* Chat bubble */
+  .chat-user {
+    background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(0, 102, 255, 0.15));
+    border: 1px solid rgba(0, 212, 255, 0.2);
+  }
+
+  .chat-ai {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  /* Nav active */
+  .nav-active {
+    color: #00d4ff !important;
+  }
+  .nav-active::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #00d4ff, #8b5cf6);
+    border-radius: 2px;
+  }
+}
+
+/* Light mode overrides */
+.light body {
+  background-image: radial-gradient(ellipse at 20% 50%, rgba(0, 173, 204, 0.05) 0%, transparent 50%),
+                    radial-gradient(ellipse at 80% 20%, rgba(139, 92, 246, 0.05) 0%, transparent 50%);
+}
+
+.light .glass-card {
+  background: rgba(255, 255, 255, 0.8);
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+.light .glass-card-hover:hover {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: rgba(0, 173, 204, 0.3);
+  box-shadow: 0 0 30px rgba(0, 173, 204, 0.1), 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+.light .chem-grid-bg {
+  background-image: linear-gradient(rgba(0, 120, 150, 0.05) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(0, 120, 150, 0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* Three.js canvas */
+canvas {
+  outline: none;
+}
+
+/* Animation delay utilities */
+.animation-delay-2000 {
+  animation-delay: 2000ms;
+}
+
+.animation-delay-4000 {
+  animation-delay: 4000ms;
+}
