@@ -28,7 +28,13 @@ import { pageTransition } from "@/lib/motionPresets";
 
 export default function App() {
   const [theme, setTheme] = useState<"dark" | "light">(() => {
-    return (localStorage.getItem("chemfusion_theme") as "dark" | "light") || "dark";
+    if (typeof window === "undefined") return "dark";
+
+    try {
+      return (window.localStorage.getItem("chemfusion_theme") as "dark" | "light") || "dark";
+    } catch {
+      return "dark";
+    }
   });
 
   // Apply theme class to <html>
@@ -36,7 +42,11 @@ export default function App() {
     const root = document.documentElement;
     root.classList.remove("dark", "light");
     root.classList.add(theme);
-    localStorage.setItem("chemfusion_theme", theme);
+    try {
+      window.localStorage.setItem("chemfusion_theme", theme);
+    } catch {
+      // Ignore storage failures so the shell can still render.
+    }
   }, [theme]);
 
   const toggleTheme = () => setTheme((t) => (t === "dark" ? "light" : "dark"));
