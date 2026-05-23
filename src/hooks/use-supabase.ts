@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { supabase, getSession, onAuthStateChange } from "@/lib/supabase";
+import { getSession, onAuthStateChange } from "@/lib/supabase";
 
 // ─── useAuth Hook ─────────────────────────────────────────────
 
@@ -12,22 +12,37 @@ export function useAuth() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Get initial session
-    getSession().then((session) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      setLoading(false);
-    });
+    let active = true;
+
+    const loadSession = async () => {
+      try {
+        const session = await getSession();
+        if (!active) return;
+        setSession(session);
+        setUser(session?.user ?? null);
+      } catch (error) {
+        console.warn("[auth] Failed to load session", error);
+        if (!active) return;
+        setSession(null);
+        setUser(null);
+      } finally {
+        if (active) setLoading(false);
+      }
+    };
+
+    void loadSession();
 
     // Listen for auth changes
     const subscription = onAuthStateChange((event, session) => {
+      if (!active) return;
       setSession(session);
       setUser(session?.user ?? null);
       setLoading(false);
     });
 
     return () => {
-      subscription?.unsubscribe();
+      active = false;
+      subscription?.unsubscribe?.();
     };
   }, []);
 

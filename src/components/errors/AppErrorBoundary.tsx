@@ -1,69 +1,55 @@
 import { Component, type ErrorInfo, type ReactNode } from "react";
-import { AlertTriangle, RefreshCcw, Home } from "lucide-react";
 
-type Props = {
+interface AppErrorBoundaryProps {
   children: ReactNode;
-};
+}
 
-type State = {
+interface AppErrorBoundaryState {
   hasError: boolean;
   error: Error | null;
-};
+}
 
-export class AppErrorBoundary extends Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.state = { hasError: false, error: null };
-  }
+export default class AppErrorBoundary extends Component<AppErrorBoundaryProps, AppErrorBoundaryState> {
+  state: AppErrorBoundaryState = {
+    hasError: false,
+    error: null,
+  };
 
-  static getDerivedStateFromError(error: Error): State {
-    return { hasError: true, error };
+  static getDerivedStateFromError(error: Error): AppErrorBoundaryState {
+    return {
+      hasError: true,
+      error,
+    };
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    if (import.meta.env.DEV) {
-      console.error("[boot] App render error", error, errorInfo);
-      return;
-    }
-
-    console.error("[boot] App render error captured; showing fallback UI.");
+    console.error("[app] Unhandled rendering error", error, errorInfo);
   }
 
-  handleReset = () => {
-    this.setState({ hasError: false, error: null });
+  handleReload = () => {
     window.location.reload();
   };
 
   render() {
     if (this.state.hasError) {
       return (
-        <div className="flex min-h-screen items-center justify-center px-4 py-10">
-          <div className="glass-card w-full max-w-xl border border-border/60 p-6 text-center shadow-2xl sm:p-8">
-            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl border border-red-400/20 bg-red-500/10 text-red-300">
-              <AlertTriangle size={22} />
-            </div>
-            <h1 className="font-display text-2xl font-semibold text-foreground">Something went wrong</h1>
-            <p className="mt-3 text-sm leading-7 text-muted-foreground">
-              The application failed to render. Reloading usually clears a stale deployment or transient runtime issue.
+        <div className="flex min-h-screen items-center justify-center bg-background px-4 text-foreground">
+          <div className="glass-card w-full max-w-xl border border-border/60 p-6 shadow-2xl">
+            <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Application error</p>
+            <h1 className="mt-3 text-2xl font-semibold">ChemiVerse could not load this screen.</h1>
+            <p className="mt-3 text-sm leading-6 text-muted-foreground">
+              The app hit an unexpected runtime error. Reloading usually clears stale client state or a bad cached asset.
             </p>
-            {import.meta.env.DEV && this.state.error ? (
-              <pre className="mt-4 overflow-auto rounded-2xl border border-border/60 bg-background/80 p-4 text-left text-xs text-muted-foreground">
-                {this.state.error.stack || this.state.error.message}
+            {this.state.error && (
+              <pre className="mt-4 overflow-auto rounded-2xl border border-border/60 bg-muted/40 p-4 text-xs text-muted-foreground">
+                {this.state.error.message}
               </pre>
-            ) : null}
-            <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
-              <button
-                onClick={this.handleReset}
-                className="btn-neon inline-flex items-center justify-center gap-2 px-5 py-3 text-sm font-semibold text-white"
-              >
-                <RefreshCcw size={16} />
+            )}
+            <div className="mt-6 flex flex-wrap gap-3">
+              <button className="btn-neon px-4 py-2 text-sm text-white" onClick={this.handleReload}>
                 Reload App
               </button>
-              <button
-                onClick={() => window.location.assign("/")}
-                className="inline-flex items-center justify-center gap-2 rounded-2xl border border-border/60 px-5 py-3 text-sm font-semibold text-foreground transition hover:bg-muted"
-              >
-                <Home size={16} />
+              <button className="rounded-xl border border-border/60 px-4 py-2 text-sm text-foreground hover:bg-muted" onClick={() => (window.location.href = "/") }>
                 Go Home
               </button>
             </div>
@@ -74,15 +60,4 @@ export class AppErrorBoundary extends Component<Props, State> {
 
     return this.props.children;
   }
-}
-
-export function AppLoadingFallback() {
-  return (
-    <div className="flex min-h-screen items-center justify-center px-4">
-      <div className="glass-card flex items-center gap-3 px-5 py-4 text-sm text-muted-foreground">
-        <span className="h-3 w-3 animate-pulse rounded-full bg-cyan-400" />
-        Loading ChemiVerse...
-      </div>
-    </div>
-  );
 }

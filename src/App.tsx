@@ -28,24 +28,28 @@ import { pageTransition } from "@/lib/motionPresets";
 
 export default function App() {
   const [theme, setTheme] = useState<"dark" | "light">(() => {
-    if (typeof window === "undefined") return "dark";
-
     try {
-      return (window.localStorage.getItem("chemfusion_theme") as "dark" | "light") || "dark";
-    } catch {
+      if (typeof window === "undefined") return "dark";
+
+      const storedTheme = window.localStorage.getItem("chemfusion_theme");
+      return storedTheme === "light" ? "light" : "dark";
+    } catch (error) {
+      console.warn("[theme] Falling back to dark theme", error);
       return "dark";
     }
   });
 
   // Apply theme class to <html>
   useEffect(() => {
+    if (typeof document === "undefined") return;
+
     const root = document.documentElement;
     root.classList.remove("dark", "light");
     root.classList.add(theme);
     try {
       window.localStorage.setItem("chemfusion_theme", theme);
-    } catch {
-      // Ignore storage failures so the shell can still render.
+    } catch (error) {
+      console.warn("[theme] Failed to persist theme preference", error);
     }
   }, [theme]);
 
