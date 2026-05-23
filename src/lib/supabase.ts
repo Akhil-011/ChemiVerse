@@ -13,7 +13,7 @@ if (!isSupabaseConfigured) {
 
 function createMissingConfigClient() {
   const missingConfigError = new Error(
-    "Supabase is not configured. Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to enable auth and persistence."
+    "Authentication is unavailable in this deployment because the Supabase environment variables are not configured."
   );
 
   const query = {

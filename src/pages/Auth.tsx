@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ArrowRight, Atom, Eye, EyeOff, Lock, Mail, User } from "lucide-react";
 import { toast } from "sonner";
 
-import { signIn, signUp } from "@/lib/supabase";
+import { isSupabaseConfigured, signIn, signUp } from "@/lib/supabase";
 import { useAuth } from "@/hooks/use-supabase";
 import { cn } from "@/lib/utils";
 
@@ -20,6 +20,7 @@ export default function AuthPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, loading: authLoading } = useAuth();
+  const authUnavailable = !isSupabaseConfigured;
 
   useEffect(() => {
     if (!authLoading && user) {
@@ -29,6 +30,14 @@ export default function AuthPage() {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+
+    if (authUnavailable) {
+      const message = "Authentication is unavailable in this deployment until Supabase env vars are configured.";
+      setError(message);
+      toast.error(message);
+      return;
+    }
+
     if (!email.trim() || !password.trim() || (mode === "signup" && !name.trim())) {
       setError("Email and password are required.");
       return;
@@ -85,6 +94,12 @@ export default function AuthPage() {
                 Use email and password authentication with persistent Supabase sessions. Your experiments, predictions, voice commands, and lab history stay linked to your account.
               </p>
             </div>
+
+            {authUnavailable && (
+              <div className="rounded-2xl border border-amber-400/20 bg-amber-500/10 px-4 py-3 text-sm text-amber-100">
+                Authentication is disabled in this deployment because Supabase environment variables are missing. Configure <span className="font-mono">VITE_SUPABASE_URL</span> and <span className="font-mono">VITE_SUPABASE_ANON_KEY</span> in Vercel to enable login.
+              </div>
+            )}
 
             <div className="grid gap-3 sm:grid-cols-2">
               {[
@@ -195,10 +210,10 @@ export default function AuthPage() {
 
                 <button
                   type="submit"
-                  disabled={loading}
+                  disabled={loading || authUnavailable}
                   className="btn-neon flex w-full items-center justify-center gap-2 py-3.5 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
                 >
-                  {loading ? "Processing..." : mode === "signin" ? "Sign In" : "Create Account"}
+                  {authUnavailable ? "Auth Unavailable" : loading ? "Processing..." : mode === "signin" ? "Sign In" : "Create Account"}
                   {!loading && <ArrowRight size={16} />}
                 </button>
               </form>
