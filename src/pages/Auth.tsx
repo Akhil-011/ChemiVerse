@@ -95,7 +95,7 @@ export default function AuthPage() {
               </p>
             </div>
 
-            {authUnavailable && (
+            {authUnavailable && import.meta.env.DEV && (
               <div className="rounded-2xl border border-amber-400/20 bg-amber-500/10 px-4 py-3 text-sm text-amber-100">
                 Authentication is disabled in this deployment because Supabase environment variables are missing. Configure <span className="font-mono">VITE_SUPABASE_URL</span> and <span className="font-mono">VITE_SUPABASE_ANON_KEY</span> in Vercel to enable login.
               </div>

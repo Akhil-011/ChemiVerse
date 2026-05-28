@@ -22,11 +22,15 @@ let groq: Groq | null = null;
 
 if (GROQ_API_KEY && GROQ_API_KEY !== "your_groq_api_key_here") {
   groq = new Groq({ apiKey: GROQ_API_KEY, dangerouslyAllowBrowser: true });
-  console.log("[API] Groq AI initialized successfully");
+  if (import.meta.env.DEV) {
+    console.log("[API] Groq AI initialized successfully");
+  }
 } else {
-  console.warn(
-    "[API] Groq API key missing. Add VITE_GROQ_API_KEY to .env.local"
-  );
+  if (import.meta.env.DEV) {
+    console.warn(
+      "[API] Groq API key missing. Add VITE_GROQ_API_KEY to .env.local"
+    );
+  }
 }
 
 // ============================================================
